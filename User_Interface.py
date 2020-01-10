@@ -26,10 +26,10 @@ class WelcomePage:
 
 
         # Create buttons to continue the application
-        #self.continue_button = Button(master, text="Continue")
-        #self.continue_button.grid(sticky=W)
-        #self.quit_button = Button(master, text="Quit")
-        #self.quit_button.grid(row=0, column=10, sticky=W)
+        self.continue_button = Button(master, text="Continue")
+        self.continue_button.pack()
+        self.quit_button = Button(master, text="Quit")
+        self.quit_button.pack()
 
 class UserInputPage:
     def __init__(self, master):
