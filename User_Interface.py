@@ -1,13 +1,13 @@
 from tkinter import *
 import time
-# The Python file that initiates and displays the initial user interface.  The user is prompted to enter certain
+# The Python file that initiates and displays the user interfaces.  The user is prompted to enter certain
 # information pertaining to a property they are researching in New York City.  Once the user has entered all of
-# the relevant information, they can continue to the results where their information will be utilized.
+# the relevant information, they can continue to the results where their predicted price will be displayed.
 
 # Create a class to represent the Welcome Page where the user will enter the property's information
 class WelcomePage:
     def __init__(self):
-        # Create the master window and its Title
+        # Create the master window and its title
         self.master = Tk()
         self.master.title("New York City Price Predictor")
 
@@ -125,22 +125,29 @@ class WelcomePage:
 
     # Create a function which decides on the action to take depending on when the "continue" button us pressed
     def decision(self):
-        error_marker = False
-        # Remind user that year must be less than 2020
-        if self.year_entry.get() == "" or int(self.year_entry.get()) > 2020:
-            self.year_restrict.config(fg="red", font=("Times New Roman bold", 18))
-            error_marker = True
+        try:
+            error_marker = False
+            # Remind user that year must be less than 2020
+            if self.year_entry.get() == "" or int(self.year_entry.get()) > 2020:
+                self.year_restrict.config(fg="red", font=("Times New Roman bold", 18))
+                error_marker = True
 
-        #Remind user to fill in all fields
-        if self.borough.get() == "" or self.neighborhood.get() == "" or self.building.get() == "" or self.unit_entry.get() == "" or self.gross_entry == "":
+            #Remind user to fill in all fields
+            if self.borough.get() == "" or self.neighborhood.get() == "" or self.building.get() == "" or self.unit_entry.get() == "" or self.gross_entry == "":
+                self.error.destroy()
+                self.error = Label(self.input_frame, text="Please fill in all fields to continue", fg="red" ,font=("Times New Roman bold", 18))
+                self.error.grid(columnspan=3)
+                error_marker = True
+
+            # If there are no errors, record the user's entered values in the correct form, and continue to the model
+            if error_marker == False:
+                self.getUserValues()
+
+        except ValueError:
             self.error.destroy()
-            self.error = Label(self.input_frame, text="Please fill in all fields to continue", fg="red" ,font=("Times New Roman bold", 18))
+            self.error = Label(self.input_frame, text="Please fill in all fields correctly.", fg="red",
+                               font=("Times New Roman bold", 18))
             self.error.grid(columnspan=3)
-            error_marker = True
-
-        # If there are no errors, record the user's entered values in the correct form, and continue to the model
-        if error_marker == False:
-            self.getUserValues()
 
     # Create a function to automatically update the neighborhood dropdown list when a different borough is selected
     def updateNeighborhoodList(self, *args):
@@ -295,3 +302,65 @@ class WelcomePage:
   #  def time_out(self):
    #     time.sleep(4)
     #    self.master2.destroy()
+
+
+# Create a class for the user interface detailing the results
+class ResultsPage:
+    def __init__(self, final_output):
+        # Create the master window and its title
+        self.results_master = Tk()
+        self.results_master.title("New York City Price Predictor")
+
+        # Save the final predicted price to a variable and edit it to later display
+        str_final_output = str(final_output)
+        # Ensure decimal displays correctly
+        decimal_position = str_final_output.find(".")
+        if decimal_position == -1:  # AKA no decimal in output
+            edited_number = str_final_output + ".00"
+        elif (str_final_output[-2] + str_final_output[-1]) == ".0":
+            edited_number = str_final_output + "0"
+        else:
+            edited_number = str_final_output[0: decimal_position + 3]
+        # Add commas where appropriate
+        full_number = "0" + edited_number[0: decimal_position]
+        decimal_number = edited_number[decimal_position:]
+        inverted_number = ""
+        for i in range(len(full_number) - 1, 0, -1):  # Invert the number to easy add commas
+            inverted_number += full_number[i]
+        if len(inverted_number) > 3:  # account for prices over $999
+            inverted_number = inverted_number[0: 3] + "," + inverted_number[3:]
+        if len(inverted_number) > 7:  # account for prices over $999,999
+            inverted_number = inverted_number[0: 7] + "," + inverted_number[7:]
+        inverted_number = "0" + inverted_number
+        final_full_number = ""
+        for i in range(len(inverted_number) - 1, 0, -1):  # Undo the Invert
+            final_full_number += inverted_number[i]
+        # Put the final number to output together
+        self.predicted_price = "$" + final_full_number + decimal_number
+
+        # Prevent user from changing the window size
+        self.results_master.geometry("600x600")  # Gives a starting geometry to the window
+        self.results_master.resizable(width=False, height=False)
+
+        # Create results screen text labels
+        self.results_title_label = Label(self.results_master, text="New York City Property Value Predictor", bg="darkblue", fg="white")
+        self.results_title_label.config(height=5, width=40)
+        self.results_title_label.config(font=("Courier bold", 25))
+        self.results_title_label.pack()
+        self.results_text_label = Label(self.results_master, text="Your final predicted price is: ")
+        self.results_text_label.config(height=5, width=60)
+        self.results_text_label.config(font=("Courier", 20))
+        self.results_text_label.pack()
+
+        # Display the final predicted price
+        self.price_label = Label(self.results_master, text=self.predicted_price, font=("Courier bold", 20))
+        self.price_label.pack()
+
+        self.white_space = Label(self.results_master, height=2)
+        self.white_space.pack()
+
+        # Create a quit button for when the user is finished
+        self.quit_button = Button(self.results_master, text="Quit", command=quit)
+        self.quit_button.pack()
+
+        self.results_master.mainloop()
