@@ -1,5 +1,6 @@
 from tkinter import *
 import time
+from datetime import date
 # The Python file that initiates and displays the user interfaces.  The user is prompted to enter certain
 # information pertaining to a property they are researching in New York City.  Once the user has entered all of
 # the relevant information, they can continue to the results where their predicted price will be displayed.
@@ -75,13 +76,17 @@ class WelcomePage:
                             "40 SELECTED GOVERNMENTAL FACILITIES", "41 TAX CLASS 4 - OTHER", "42 CONDO CULTURAL/MEDICAL/EDUCATIONAL/ETC",
                             "43 CONDO OFFICE BUILDINGS", "44 CONDO PARKING", "45 CONDO HOTELS", "46 CONDO STORE BUILDINGS",
                             "47 CONDO NON-BUSINESS STORAGE", "48 CONDO TERRACES/GARDENS/CABANAS", "49 CONDO WAREHOUSES/FACTORY/INDUS"]
+        reduced_building_classes = ["04 TAX CLASS 1 CONDOS", "07 RENTALS - WALKUP APARTMENTS", "08 RENTALS - ELEVATOR APARTMENTS",
+                                   "09 COOPS - WALKUP APARTMENTS", "10 COOPS - ELEVATOR APARTMENTS", "11A CONDO-RENTALS",
+                                   "12 CONDOS - WALKUP APARTMENTS", "13 CONDOS - ELEVATOR APARTMENTS",
+                                   "14 RENTALS - 4-10 UNIT", "15 CONDOS - 2-10 UNIT RESIDENTIAL"]
         self.building = StringVar(self.input_frame)
         self.building.set("                         ")
 
         self.building_label = Label(self.input_frame, text="Building Class: ")
         self.building_label.grid(row=2, column=0, sticky=E)
 
-        self.building_dropdown = OptionMenu(self.input_frame, self.building, *building_classes)
+        self.building_dropdown = OptionMenu(self.input_frame, self.building, *reduced_building_classes)
         self.building_dropdown.grid(row=2, column=1, sticky=W)
 
         # Create user entry field for Year Built
@@ -258,6 +263,9 @@ class WelcomePage:
 
     # Records all user entered values into a list and pass off to the model
     def getUserValues(self):
+        today = date.today()
+        current_month = str(today)[5:7]
+
         # Convert borough to usable form
         if self.borough.get() == "Manhattan":
             new_borough = 1
@@ -277,7 +285,7 @@ class WelcomePage:
 
         # Record the final user data to the user data list
         self.user_data = [new_borough, new_neighborhood, self.building.get(),self.year_entry.get(), self.unit_entry.get(),
-                       self.gross_entry.get()]
+                       self.gross_entry.get(), current_month]
 
         # Close the first window and Start up the Loading Page
         self.master.destroy()
