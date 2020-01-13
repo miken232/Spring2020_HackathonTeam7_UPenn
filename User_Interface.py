@@ -26,7 +26,7 @@ class WelcomePage:
         self.input_frame.pack()
 
         # Create welcome screen text labels
-        self.title_label = Label(self.title_frame, text="New York City Property Value Predictor", bg="darkblue", fg="white")
+        self.title_label = Label(self.title_frame, text="NYC Property Value Predictor", bg="darkblue", fg="white")
         self.title_label.config(height=5, width=40)
         self.title_label.config(font=("Courier bold", 30))
         self.title_label.pack()
@@ -351,11 +351,11 @@ class ResultsPage:
         self.results_master.resizable(width=False, height=False)
 
         # Create results screen text labels
-        self.results_title_label = Label(self.results_master, text="New York City Property Value Predictor", bg="darkblue", fg="white")
+        self.results_title_label = Label(self.results_master, text="NYC Property Value Predictor", bg="darkblue", fg="white")
         self.results_title_label.config(height=5, width=40)
         self.results_title_label.config(font=("Courier bold", 25))
         self.results_title_label.pack()
-        self.results_text_label = Label(self.results_master, text="Your final predicted price is: ")
+        self.results_text_label = Label(self.results_master, text="Final predicted price is: ")
         self.results_text_label.config(height=5, width=60)
         self.results_text_label.config(font=("Courier", 20))
         self.results_text_label.pack()

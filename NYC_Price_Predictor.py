@@ -1,5 +1,6 @@
 import User_Interface
-#import nyc_residential_sales
+import nyc_residential_sales
+import numpy as np
 
 # Create the full welcome page
 welcome = User_Interface.WelcomePage()
@@ -12,7 +13,7 @@ user_information = welcome.user_data
 #Here, user_information list in this order : Borough, Neighborhood, Building class, year built, # of units, GROSS SQ FT, Sale Month
 #[1, 'FINANCIAL', '09 COOPS - WALKUP APARTMENTS', '1935', '5', '2019', '01']
 # Need to get X_test array from "nyc_residential_sales.py". How?
-X_test1=X_test
+X_test1=nyc_residential_sales.X_test
 X_test1=X_test1.drop(X_test1.index[1:])
 #print(X_test1)
 df = X_test1
@@ -506,11 +507,11 @@ elif user_information[6] == "SALE MONTH_11" :
 elif user_information[6] == "SALE MONTH_12" :
     X_test1.iloc[0, 233] = '1'
 
-Y_pred_test1 = rf_regr.predict(X_test1)
+Y_pred_test1 = nyc_residential_sales.rf_regr.predict(X_test1)
 Predictor_Price = (2.71828**(Y_pred_test1)) -1
 #print(Y_pred_test1)
-#print(Predictor_Price)
+print(float(Predictor_Price))
 
 # Create the Results Page
 #results = User_Interface.ResultsPage(657912.35135135)
-results = User_Interface.ResultsPage(Predictor_Price)
+results = User_Interface.ResultsPage(float(Predictor_Price))
